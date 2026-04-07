@@ -146,7 +146,7 @@ This project uses the IIT Mandi Skull-to-Face dataset:
 - 51 skull X-ray pairs (frontal + lateral)
 - 128-dimensional ArcFace face embeddings
 - Augmented to 19,278 training pairs using custom pipeline
-- Combined with CelebA (2000+ faces) for two-stage training
+- Combined with CelebA (200k faces) for two-stage training
 
 If you use this dataset please cite:
 @misc{prasad2025fcrinvestigatinggenerativeai,
