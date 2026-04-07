@@ -1,0 +1,11 @@
+node_modules/
+server/node_modules/
+server/uploads/
+server/.env
+ai-service/__pycache__/
+*.pyc
+*.pth
+*.ckpt
+nohup.out
+.DS_Store
+Thumbs.db
