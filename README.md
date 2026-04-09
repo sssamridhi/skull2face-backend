@@ -177,6 +177,124 @@ url={https://arxiv.org/abs/2508.18031}
 - Frontend: [skull2face-frontend](https://github.com/sssamridhi/skull2face-frontend)
 
 ---
+# Skull2Face AI — Setup Guide
+
+## Requirements
+
+### System Requirements
+- Node.js v18+ 
+- Python 3.9+
+- MongoDB Community Server
+- Git
+- NVIDIA GPU (for AI model — A100 recommended)
+
+---
+
+## Backend Setup (Node.js)
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/sssamridhi/skull2face-backend.git
+cd skull2face-backend/server
+```
+
+### 2. Install Node packages
+```bash
+npm install
+```
+
+### 3. Create .env file
+Create a file called `.env` inside the `server/` folder:
+```
+MONGO_URI=mongodb://localhost:27017/skull2face
+JWT_SECRET=your_super_secret_key_here
+AI_SERVICE_URL=http://localhost:8000
+PORT=5000
+```
+
+### 4. Seed the database (creates admin + user accounts)
+```bash
+node seed.js
+```
+
+### 5. Start the server
+```bash
+npm run dev
+```
+
+Server runs on **http://localhost:5000**
+
+---
+
+## AI Service Setup (Python/Flask on DGX)
+
+### 1. Activate gfpgan environment
+```bash
+conda activate gfpgan
+```
+
+### 2. Install Python requirements
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run Flask API
+```bash
+cd /home/ffr/forensic_reconstruction
+CUDA_VISIBLE_DEVICES=4 python web/app.py
+```
+
+Flask API runs on **http://0.0.0.0:8000**
+
+---
+
+## SSH Tunnel (connect your PC to DGX)
+
+Run this in a terminal on your PC and keep it open:
+```bash
+ssh -L 8000:localhost:8000 ffr@172.16.40.56
+```
+
+This tunnels your PC's port 8000 to the DGX server.
+
+---
+
+## Frontend Setup
+
+### 1. Clone the repo
+```bash
+git clone https://github.com/sssamridhi/skull2face-frontend.git
+```
+
+### 2. Open with Live Server
+- Open VS Code
+- Install **Live Server** extension
+- Right click `login.html` → **Open with Live Server**
+
+---
+
+## Full Startup Order (every time)
+
+```
+1. mongod                          ← start MongoDB
+2. cd server && npm run dev        ← start Node server  
+3. ssh -L 8000:localhost:8000 ...  ← SSH tunnel (keep open)
+4. conda activate gfpgan           ← on DGX
+5. python web/app.py               ← start Flask on DGX
+6. Open login.html with Live Server
+```
+
+---
+
+## Demo Credentials
+
+| Role | Username | Password |
+|------|----------|----------|
+| Admin | admin | admin123 |
+| Investigator | user | user123 |
+
+---
+
 
 ## Project Context
 
