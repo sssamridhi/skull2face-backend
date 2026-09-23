@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skull2Face AI — Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800&display=swap" rel="stylesheet">
+  <!link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+
+<!-- ═══════════════ TOP BAR ═══════════════ -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" id="hamburgerBtn">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="topbar-brand">
+      <img src="assets/logo.png" alt="Logo" class="topbar-logo">
+      <span class="brand-text">Skull2Face <strong>AI</strong></span>
+      <span class="admin-pill"><i class="fa-solid fa-shield-halved"></i> Admin</span>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <!-- Notifications -->
+    <div class="notif-wrap">
+      <button class="icon-btn" id="notifBtn">
+        <i class="fa-regular fa-bell"></i>
+        <span class="badge-dot" id="notifDot"></span>
+      </button>
+      <div class="notif-dropdown hidden" id="notifDropdown">
+        <div class="dropdown-header">
+          <span>Notifications</span>
+          <button class="clear-btn" onclick="clearNotifs()">Mark all read</button>
+        </div>
+        <ul class="notif-list">
+          <li class="notif-item unread">
+            <i class="fa-solid fa-folder-plus ni-icon info"></i>
+            <div class="ni-text"><p>New case submitted — <strong>CA115</strong> by INV-007</p><small>10 min ago</small></div>
+          </li>
+          <li class="notif-item unread">
+            <i class="fa-solid fa-circle-check ni-icon success"></i>
+            <div class="ni-text"><p>Reconstruction complete — <strong>CA112</strong></p><small>2 hours ago</small></div>
+          </li>
+          <li class="notif-item unread">
+            <i class="fa-solid fa-user-plus ni-icon admin"></i>
+            <div class="ni-text"><p>New investigator account created — <strong>INV-010</strong></p><small>Yesterday</small></div>
+          </li>
+          <li class="notif-item">
+            <i class="fa-solid fa-triangle-exclamation ni-icon warn"></i>
+            <div class="ni-text"><p>Case <strong>CA103</strong> pending review for 12 days</p><small>Yesterday</small></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="avatar-wrap" id="avatarWrap">
+      <div class="avatar-circle admin-avatar"><span>AD</span></div>
+      <span class="avatar-label">Admin</span>
+      <i class="fa-solid fa-chevron-down chev"></i>
+      <div class="profile-dropdown hidden" id="profileDropdown">
+        <div class="pd-head">
+          <div class="pd-avatar admin-avatar"><span>AD</span></div>
+          <div>
+            <p class="pd-name">Administrator</p>
+            <p class="pd-role"><i class="fa-solid fa-shield-halved"></i> System Admin</p>
+          </div>
+        </div>
+        <ul class="pd-menu">
+          <li><button onclick="showSection('settings')"><i class="fa-regular fa-user"></i> My Profile</button></li>
+        </ul>
+        <div class="pd-footer">
+          <button class="logout-btn" onclick="logout()">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Overlay -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<aside class="sidebar" id="sidebar">
+  <nav class="sidebar-nav">
+    <p class="nav-section-label">MAIN</p>
+    <ul>
+      <li><button class="nav-btn active" data-section="dashboard" onclick="showSection('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></button></li>
+      <li><button class="nav-btn" data-section="cases" onclick="showSection('cases')"><i class="fa-solid fa-folder-open"></i><span>Cases Management</span></button></li>
+      <li><button class="nav-btn" data-section="investigators" onclick="showSection('investigators')"><i class="fa-solid fa-users"></i><span>Investigators</span></button></li>
+      <li><button class="nav-btn" data-section="reports" onclick="showSection('reports')"><i class="fa-solid fa-file-lines"></i><span>Reports</span></button></li>
+    </ul>
+    <p class="nav-section-label" style="margin-top:20px">SYSTEM</p>
+    <ul>
+      <li><button class="nav-btn" data-section="logs" onclick="showSection('logs')"><i class="fa-solid fa-list-check"></i><span>System Logs</span></button></li>
+    </ul>
+  </nav>
+  <div class="sidebar-foot">
+    <i class="fa-solid fa-shield-halved" style="color:var(--admin)"></i>
+    <span>v2.1.0 · Admin Panel</span>
+  </div>
+</aside>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<main class="main" id="mainContent">
+
+  <!-- ══ DASHBOARD ══ -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Admin Overview</h1>
+        <p class="page-sub">System-wide statistics and activity — <span id="todayDate"></span></p>
+      </div>
+      <button class="cta-btn" onclick="showSection('cases')">
+        <i class="fa-solid fa-folder-open"></i> Manage Cases
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card" style="--clr:#8b5cf6">
+        <div class="stat-left"><span class="stat-label">Total Cases</span><span class="stat-num" data-target="47">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-folder"></i></div>
+        <div class="stat-progress" style="--pct:100%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#06b6d4">
+        <div class="stat-left"><span class="stat-label">Active</span><span class="stat-num" data-target="9">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-circle-half-stroke"></i></div>
+        <div class="stat-progress" style="--pct:19%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#10b981">
+        <div class="stat-left"><span class="stat-label">Completed</span><span class="stat-num" data-target="31">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="stat-progress" style="--pct:66%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#f59e0b">
+        <div class="stat-left"><span class="stat-label">Pending</span><span class="stat-num" data-target="7">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-hourglass-half"></i></div>
+        <div class="stat-progress" style="--pct:15%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#c026d3">
+        <div class="stat-left"><span class="stat-label">Investigators</span><span class="stat-num" data-target="8">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-progress" style="--pct:80%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#f43f5e">
+        <div class="stat-left"><span class="stat-label">Reconstructions Today</span><span class="stat-num" data-target="3">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-microchip"></i></div>
+        <div class="stat-progress" style="--pct:30%"></div>
+      </div>
+    </div>
+
+    <!-- Charts + Activity -->
+    <div class="dash-bottom two-col">
+      <div class="glass-card chart-card">
+        <div class="gc-header">
+          <span class="gc-title">Cases per Month</span>
+          <span class="gc-tag">Last 6 months</span>
+        </div>
+        <canvas id="barChart" height="220"></canvas>
+      </div>
+      <div class="glass-card activity-card">
+        <div class="gc-header">
+          <span class="gc-title">System Activity</span>
+          <span class="gc-tag live"><i class="fa-solid fa-circle"></i> Live</span>
+        </div>
+        <ul class="activity-list">
+          <li><div class="a-dot info"></div><div class="a-body"><p><strong>INV-007</strong> submitted CA115</p><small>10 min ago</small></div></li>
+          <li><div class="a-dot success"></div><div class="a-body"><p>CA112 reconstruction complete</p><small>2 hrs ago</small></div></li>
+          <li><div class="a-dot admin"></div><div class="a-body"><p>New investigator INV-010 created</p><small>Yesterday</small></div></li>
+          <li><div class="a-dot warn"></div><div class="a-body"><p><strong>INV-003</strong> submitted CA114</p><small>Yesterday</small></div></li>
+          <li><div class="a-dot success"></div><div class="a-body"><p>CA109 report downloaded</p><small>Mar 26</small></div></li>
+          <li><div class="a-dot info"></div><div class="a-body"><p><strong>INV-005</strong> submitted CA113</p><small>Mar 25</small></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CASES MANAGEMENT ══ -->
+  <section class="page" id="page-cases">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Cases Management</h1>
+        <p class="page-sub">View, filter, and manage all submitted cases.</p>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-ico"></i>
+        <input type="text" id="caseSearch" placeholder="Search by Case ID, number, or description..." oninput="filterCases()">
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-filter="all"       onclick="setFilter('all',this)">All <span class="tab-count">47</span></button>
+        <button class="filter-tab"        data-filter="active"    onclick="setFilter('active',this)">Active <span class="tab-count">9</span></button>
+        <button class="filter-tab"        data-filter="completed" onclick="setFilter('completed',this)">Completed <span class="tab-count">31</span></button>
+        <button class="filter-tab"        data-filter="pending"   onclick="setFilter('pending',this)">Pending <span class="tab-count">7</span></button>
+      </div>
+    </div>
+
+    <div class="table-card glass-card">
+      <table class="data-table" id="casesTable">
+        <thead>
+          <tr>
+            <th>Case ID</th>
+            <th>Investigator</th>
+            <th>Description</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="casesTableBody"></tbody>
+      </table>
+      <p class="empty-msg hidden" id="caseNoResults"><i class="fa-solid fa-circle-exclamation"></i> No cases match your search.</p>
+    </div>
+  </section>
+
+  <!-- ══ INVESTIGATORS ══ -->
+  <section class="page" id="page-investigators">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Investigators</h1>
+        <p class="page-sub">Manage investigator accounts and assignments.</p>
+      </div>
+      <button class="cta-btn" onclick="openAddInvModal()">
+        <i class="fa-solid fa-user-plus"></i> Add Investigator
+      </button>
+    </div>
+
+    <div class="search-wrap" style="margin-bottom:22px">
+      <i class="fa-solid fa-magnifying-glass search-ico"></i>
+      <input type="text" id="invSearch" placeholder="Search by name or ID..." oninput="filterInvestigators()">
+    </div>
+
+    <div class="inv-grid" id="invGrid"></div>
+  </section>
+
+  <!-- ══ REPORTS ══ -->
+  <section class="page" id="page-reports">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Reports</h1>
+        <p class="page-sub">All completed reconstruction reports across investigators.</p>
+      </div>
+      <div class="filter-select-wrap">
+        <i class="fa-solid fa-filter" style="color:var(--admin)"></i>
+        <select id="reportInvFilter" onchange="filterReports()" class="filter-select">
+          <option value="all">All Investigators</option>
+          <option value="INV-001">INV-001 · Aryan Sharma</option>
+          <option value="INV-002">INV-002 · Priya Menon</option>
+          <option value="INV-003">INV-003 · Ravi Kumar</option>
+          <option value="INV-004">INV-004 · Neha Joshi</option>
+        </select>
+      </div>
+    </div>
+    <div class="reports-grid" id="reportsGrid"></div>
+  </section>
+
+  <!-- ══ SYSTEM LOGS ══ -->
+  <section class="page" id="page-logs">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">System Logs</h1>
+        <p class="page-sub">Complete audit trail of all system events.</p>
+      </div>
+      <button class="cta-btn" onclick="exportLogs()">
+        <i class="fa-solid fa-file-arrow-down"></i> Export CSV
+      </button>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass search-ico"></i>
+        <input type="text" id="logSearch" placeholder="Filter logs by investigator, case ID, or action..." oninput="filterLogs()">
+      </div>
+    </div>
+
+    <div class="table-card glass-card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Investigator</th>
+            <th>Action</th>
+            <th>Case ID</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody id="logsTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  </section>
+
+</main>
+
+<!-- ═══════════ MODALS ═══════════ -->
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay hidden" id="deleteModal">
+  <div class="modal">
+    <div class="modal-icon danger"><i class="fa-solid fa-trash"></i></div>
+    <h3>Delete Case</h3>
+    <p>Are you sure you want to delete case <strong id="deleteCaseId"></strong>? This action cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('deleteModal')">Cancel</button>
+      <button class="modal-confirm danger" onclick="confirmDelete()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Investigator Modal -->
+<div class="modal-overlay hidden" id="addInvModal">
+  <div class="modal">
+    <div class="modal-icon admin"><i class="fa-solid fa-user-plus"></i></div>
+    <h3>Add Investigator</h3>
+    <div class="form-group" style="margin-bottom:14px;text-align:left">
+      <label><i class="fa-regular fa-user"></i> Full Name</label>
+      <input type="text" id="newInvName" placeholder="e.g. Aryan Sharma">
+    </div>
+    <div class="form-group" style="margin-bottom:14px;text-align:left">
+      <label><i class="fa-solid fa-id-badge"></i> Investigator ID</label>
+      <input type="text" id="newInvId" placeholder="e.g. INV-011" readonly class="readonly-input" value="INV-011">
+    </div>
+    <div class="form-group" style="margin-bottom:14px;text-align:left">
+      <label><i class="fa-solid fa-building"></i> Department</label>
+      <input type="text" id="newInvDept" placeholder="e.g. Forensic Division">
+    </div>
+    <div class="form-group" style="margin-bottom:20px;text-align:left">
+      <label><i class="fa-solid fa-lock"></i> Password</label>
+      <input type="password" id="newInvPass" placeholder="Set initial password">
+    </div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal('addInvModal')">Cancel</button>
+      <button class="modal-confirm admin" onclick="confirmAddInv()">Add Investigator</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script src="admin-dashboard.js"></script>
+</body>
+</html>

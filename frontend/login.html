@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skull2Face AI — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+    body {
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg,rgba(8,8,20,0.93),rgba(15,10,35,0.97)), url("assets/home-bg.png") no-repeat center center/cover;
+      background-attachment:fixed; padding:20px;
+    }
+    .login-card {
+      width:100%; max-width:440px; background:rgba(255,255,255,0.04);
+      border:1px solid rgba(139,92,246,0.2); border-radius:28px; backdrop-filter:blur(22px);
+      padding:46px 44px 40px;
+      box-shadow:0 30px 80px rgba(0,0,0,0.55),0 0 0 1px rgba(255,255,255,0.05) inset;
+      animation:cardIn 0.5s cubic-bezier(.22,.68,0,1.2) both;
+    }
+    @keyframes cardIn { from{opacity:0;transform:translateY(36px) scale(0.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+    .card-logo { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:10px; }
+    .card-logo img { width:40px; filter:drop-shadow(0 0 10px #8b5cf6); }
+    .card-logo span { font-size:20px; font-weight:600; color:#e0e7ff; }
+    .card-tagline { text-align:center; font-size:12.5px; color:#4b5563; margin-bottom:36px; letter-spacing:0.3px; }
+    .role-badge { display:none; align-items:center; justify-content:center; gap:8px; padding:8px 16px; border-radius:30px; font-size:13px; font-weight:500; margin-bottom:22px; animation:badgeIn 0.3s ease both; }
+    @keyframes badgeIn { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
+    .role-badge.admin { background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.4); color:#c4b5fd; }
+    .role-badge.investigator { background:rgba(6,182,212,0.12); border:1px solid rgba(6,182,212,0.35); color:#67e8f9; }
+    .role-badge.show { display:flex; }
+    .form-title { font-size:24px; font-weight:600; background:linear-gradient(to right,#a78bfa,#22d3ee); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px; }
+    .form-subtitle { font-size:13px; color:#6b7280; margin-bottom:30px; }
+    .input-group { margin-bottom:18px; }
+    .input-group label { display:block; font-size:11.5px; font-weight:500; color:#9ca3af; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; }
+    .input-wrap { position:relative; }
+    .input-icon { position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:15px; pointer-events:none; opacity:0.55; transition:opacity 0.3s; }
+    .input-wrap:focus-within .input-icon { opacity:1; }
+    .input-wrap input { width:100%; padding:13px 16px 13px 44px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.09); border-radius:13px; color:#e0e7ff; font-size:14.5px; outline:none; transition:all 0.3s; }
+    .input-wrap input::placeholder { color:#374151; }
+    .input-wrap input:focus { border-color:#8b5cf6; background:rgba(139,92,246,0.07); box-shadow:0 0 0 3px rgba(139,92,246,0.15); }
+    .toggle-pw { position:absolute; right:13px; top:50%; transform:translateY(-50%); background:none; border:none; color:#4b5563; cursor:pointer; font-size:15px; transition:color 0.2s; padding:3px; }
+    .toggle-pw:hover { color:#a78bfa; }
+    .error-msg { display:none; background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.28); border-radius:11px; padding:11px 14px; font-size:13px; color:#fca5a5; margin-bottom:18px; gap:8px; align-items:center; }
+    .error-msg.show { display:flex; animation:shake 0.35s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+    .submit-btn { width:100%; padding:14px; margin-top:4px; border:none; border-radius:14px; background:linear-gradient(45deg,#8b5cf6,#06b6d4); color:white; font-size:15px; font-weight:600; cursor:pointer; letter-spacing:0.3px; position:relative; overflow:hidden; transition:transform 0.25s,box-shadow 0.25s; }
+    .submit-btn::before { content:""; position:absolute; inset:0; background:linear-gradient(45deg,#7c3aed,#0891b2); opacity:0; transition:opacity 0.3s; }
+    .submit-btn:hover::before { opacity:1; }
+    .submit-btn .btn-label { position:relative; z-index:1; }
+    .submit-btn:hover { transform:translateY(-2px); box-shadow:0 12px 32px rgba(139,92,246,0.5); }
+    .submit-btn:active { transform:scale(0.98); }
+    .divider { display:flex; align-items:center; gap:12px; margin:22px 0 18px; }
+    .divider::before,.divider::after { content:""; flex:1; height:1px; background:rgba(255,255,255,0.07); }
+    .divider span { font-size:11.5px; color:#374151; white-space:nowrap; }
+    .hint-box { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:13px 16px; font-size:12px; color:#374151; line-height:1.85; }
+    .hint-box strong { color:#6b7280; display:block; margin-bottom:4px; font-size:11px; text-transform:uppercase; letter-spacing:0.5px; }
+    .hint-row { display:flex; justify-content:space-between; gap:10px; }
+    .hint-cred { flex:1; padding:8px 10px; border-radius:8px; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); }
+    .hint-cred .role-name { font-size:11px; font-weight:600; margin-bottom:3px; }
+    .hint-cred.adm .role-name { color:#a78bfa; }
+    .hint-cred.inv .role-name { color:#22d3ee; }
+    .hint-cred span { display:block; font-size:11.5px; color:#4b5563; }
+    .hint-cred b { color:#6b7280; font-weight:500; }
+    .back-link { display:block; text-align:center; margin-top:24px; font-size:13px; color:#374151; text-decoration:none; transition:color 0.2s; }
+    .back-link:hover { color:#a78bfa; }
+    @media (max-width:480px) { .login-card{padding:32px 22px 28px} .form-title{font-size:21px} .hint-row{flex-direction:column} }
+  </style>
+</head>
+<body>
+
+<div class="login-card">
+  <div class="card-logo">
+    <img src="assets/logo.png" alt="Logo">
+    <span>Skull2Face AI</span>
+  </div>
+  <p class="card-tagline">Forensic Identity Reconstruction System</p>
+
+  <div class="role-badge" id="role-badge"></div>
+
+  <h2 class="form-title">Welcome Back</h2>
+  <p class="form-subtitle">Enter your credentials.</p>
+
+  <div class="error-msg" id="error-msg">
+      &nbsp; Invalid username or password. Please try again.
+  </div>
+
+  <div class="input-group">
+    <label>Username</label>
+    <div class="input-wrap">
+      <span class="input-icon"></span>
+      <input type="text" id="username" placeholder="Enter your username" autocomplete="off" oninput="clearError()">
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>Password</label>
+    <div class="input-wrap">
+      <span class="input-icon"></span>
+      <input type="password" id="password" placeholder="Enter your password" oninput="clearError()">
+      <button class="toggle-pw" onclick="togglePw()" tabindex="-1" id="pw-toggle">
+        <i class="fa-regular fa-eye" id="pw-toggle-icon"></i>
+      </button>
+    </div>
+  </div>
+
+  <button class="submit-btn" onclick="doLogin()" id="login-btn">
+    <span class="btn-label">Login</span>
+  </button>
+
+  <div class="divider"><span>demo credentials</span></div>
+
+  <div class="hint-box">
+    <strong>Use any of these to try the system</strong>
+    <div class="hint-row">
+      <div class="hint-cred adm">
+        <div class="role-name">🛡️ Admin</div>
+        <span>User: <b>admin</b></span>
+        <span>Pass: <b>admin123</b></span>
+      </div>
+      <div class="hint-cred inv">
+        <div class="role-name">🔍 Investigator</div>
+        <span>User: <b>user</b></span>
+        <span>Pass: <b>user123</b></span>
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-link">← Back to Home</a>
+</div>
+
+<script>
+  const API = 'http://localhost:5000/api';
+
+  async function doLogin() {
+    const username  = document.getElementById('username').value.trim();
+    const password  = document.getElementById('password').value;
+    const err       = document.getElementById('error-msg');
+    const badge     = document.getElementById('role-badge');
+    const btnLabel  = document.querySelector('.btn-label');
+
+    if (!username || !password) {
+      showError(); return;
+    }
+
+    btnLabel.textContent = 'Logging in…';
+    document.getElementById('login-btn').style.pointerEvents = 'none';
+
+    try {
+      const res  = await fetch(`${API}/auth/login`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        // Save to localStorage
+        localStorage.setItem('token',    data.token);
+        localStorage.setItem('role',     data.user.role);
+        localStorage.setItem('username', data.user.username);
+
+        // Show role badge
+        const isAdmin = data.user.role === 'admin';
+        badge.className = `role-badge ${isAdmin ? 'admin' : 'investigator'} show`;
+        badge.innerHTML = `${isAdmin ? '🛡️' : '🔍'} &nbsp; Detected role: <strong style="margin-left:4px">${data.user.role}</strong>`;
+
+        btnLabel.textContent = '✓ Logging in…';
+
+        setTimeout(() => {
+          window.location.href = isAdmin ? 'admin-dashboard.html' : 'dashboard.html';
+        }, 900);
+
+      } else {
+        showError();
+        btnLabel.textContent = 'Login';
+        document.getElementById('login-btn').style.pointerEvents = 'auto';
+      }
+
+    } catch (e) {
+      console.error('Login error:', e);
+      err.innerHTML = '⚠️&nbsp; Cannot connect to server. Make sure backend is running.';
+      showError();
+      btnLabel.textContent = 'Login';
+      document.getElementById('login-btn').style.pointerEvents = 'auto';
+    }
+  }
+
+  function showError() {
+    const err = document.getElementById('error-msg');
+    document.getElementById('role-badge').className = 'role-badge';
+    err.classList.remove('show');
+    void err.offsetWidth;
+    err.classList.add('show');
+  }
+
+  function clearError() {
+    document.getElementById('error-msg').classList.remove('show');
+  }
+
+  function togglePw() {
+    const input  = document.getElementById('password');
+    const hidden = input.type === 'password';
+    input.type   = hidden ? 'text' : 'password';
+    document.getElementById('pw-toggle-icon').className = hidden ? 'fa-regular fa-eye-slash' : 'fa-regular fa-eye';
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+
+</body>
+</html>
