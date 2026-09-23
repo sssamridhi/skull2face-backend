@@ -1,306 +1,143 @@
-# Skull2Face AI — Backend
+# Skull2Face AI
 
-Full backend system for the Skull2Face AI forensic facial
-reconstruction platform. Consists of two servers working together:
-a Node.js REST API and a Python Flask AI service.
+Skull2Face AI is an academic prototype for AI-assisted forensic facial reconstruction from skull X-ray inputs. The project was developed as a B.Tech final-year group project at Banasthali Vidyapith.
 
----
+> **Important:** This project is not a public-facing forensic service and is not intended for operational identification or legal decision-making. The reconstruction pipeline depends on a college-hosted GPU environment that is accessible only within the institution's network.
 
-## System Architecture
-Browser (Frontend)
-↓ HTTP — port 5500
-Node.js + Express Server — port 5000
-↓ HTTP via SSH Tunnel
-SSH Tunnel (localhost:8000 → DGX GPU Server:8000)
-↓
-Flask AI API — port 8000
-↓
-Stable Diffusion 1.5 + ControlNet on NVIDIA A100 GPU
-↓ base64 PNG response
-Back through the same chain to Browser
+## System Overview
 
----
+The project is organized as a single repository containing three components:
 
-## Part 1 — Node.js Server
-
-Handles authentication, case management, file storage, and
-communication between the frontend and the AI service.
-
-### Tech Stack
-
-| Package | Purpose |
-|---------|---------|
-| express | REST API framework |
-| mongoose | MongoDB object modeling |
-| bcryptjs | Password hashing |
-| jsonwebtoken | JWT authentication |
-| multer | Skull X-ray file upload handling |
-| axios | HTTP calls to Flask AI service |
-| cors | Cross-origin request handling |
-| dotenv | Environment variable management |
-| nodemon | Auto-restart on code changes |
-
-### API Routes
-POST   /api/auth/login                    Login
-POST   /api/auth/register                 Register investigator
-GET    /api/user/me                       Get own profile
-PUT    /api/user/profile                  Update profile
-POST   /api/reconstruct/upload            Submit case + X-rays
-GET    /api/reconstruct/history           Get case history
-GET    /api/reconstruct/download/:id      Download result
-GET    /api/admin/cases                   All cases (admin)
-DELETE /api/admin/cases/:id               Delete case (admin)
-GET    /api/admin/users                   All investigators (admin)
-PATCH  /api/admin/users/:id/toggle        Toggle active status (admin)
-GET    /api/admin/stats                   System statistics (admin)
-GET    /api/admin/logs                    Activity logs (admin)
-
-### Database — MongoDB
-
-Three collections:
-
-- `users` — credentials, roles, profile info, department, avatar
-- `reconstructions` — case ID, skull images, traits, output, status
-- `logs` — system events (login, submit, complete, delete)
-
-### How to Run
-```bash
-cd server
-npm install
-# Create .env file (see .env.example)
-npm run dev
+```text
+Investigator / Admin Interface
+            |
+            v
+      Frontend (HTML/CSS/JS)
+            |
+            v
+   Node.js + Express REST API
+      |                 |
+      v                 v
+   MongoDB        Flask AI Service
+                       |
+                       v
+              GPU-hosted ML Pipeline
+                       |
+                       v
+              Reconstructed Face
 ```
 
-Required `.env` variables:
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-AI_SERVICE_URL=http://localhost:8000
-PORT=5000
+## Repository Structure
 
----
-
-## Part 2 — Flask AI Service
-
-Python Flask API running on a college DGX GPU server.
-Handles all deep learning inference.
-
-### Hardware
-
-- 8x NVIDIA A100-SXM4-40GB GPUs
-- CUDA 12.2
-- NVIDIA DGX Server
-
-### AI Pipeline
-
-Receive skull X-rays (frontal + lateral) as base64
-Decode and preprocess images
-SkullEncoder CNN → 128-dimensional skull embedding + gender detection
-SkullControlNet → spatial skull structure features
-ConditioningProjector → fuse skull features with trait hints
-Stable Diffusion 1.5 UNet → DDIM sampling (75 steps)
-Generate 5 seed variations → select best by quality score
-GFPGAN → face enhancement and noise removal
-Return result as base64 PNG
-
-
-### Trained Models
-
-| File | Size | Purpose |
-|------|------|---------|
-| skull_encoder_best.pth | 45MB | Skull CNN encoder |
-| controlnet_ultimate.pth | 14MB | ControlNet weights |
-
-> Model weights are not included in this repository due to file size.
-> They are stored on the DGX GPU server.
-> Contact the repository owner for access.
-
-### Python Dependencies
-flask
-flask-cors
-torch==2.1
-diffusers==0.37.1
-transformers
-opencv-python
-pillow
-gfpgan
-
-### How to Run (on GPU server)
-```bash
-conda activate gfpgan
-cd forensic_reconstruction/web
-python app.py
+```text
+skull2face/
+|-- frontend/               # Investigator/admin web interface
+|   |-- index.html
+|   |-- login.html
+|   |-- dashboard.html
+|   |-- admin-dashboard.html
+|   |-- *.css
+|   |-- *.js
+|   `-- assets/
+|-- server/                 # Node.js + Express application layer
+|   |-- config/
+|   |-- middleware/
+|   |-- models/
+|   |-- routes/
+|   |-- index.js
+|   |-- package.json
+|   `-- .env.example
+|-- ai-service/             # Flask inference API
+|   |-- app.py
+|   `-- requirements.txt
+|-- docs/
+|   `-- architecture.md
+|-- .gitignore
+`-- README.md
 ```
 
-Access via SSH tunnel from local machine:
-```bash
-ssh -L 8000:localhost:8000 username@server_ip -N
-```
+## What the System Does
 
----
+The interface supports two user roles:
+
+- **Investigator** — submit a case, upload frontal/lateral skull X-rays, provide optional profile hints, view previous cases, and download results.
+- **Administrator** — manage users and cases, review system activity, and view dashboard statistics.
+
+The Node.js server handles authentication, case management, database access, uploads, and communication with the AI service.
+
+The Flask service receives skull images and profile hints, forwards them to the reconstruction pipeline running on the college GPU server, and returns the generated reconstruction to the application layer.
+
+## AI Pipeline
+
+The current research pipeline includes:
+
+- skull-image preprocessing
+- CNN-based skull feature extraction
+- learned spatial conditioning
+- diffusion-based facial reconstruction
+- multiple candidate generations
+- post-processing / face enhancement
+
+The model weights and full training environment are not included in this repository because the inference stack is hosted on college GPU infrastructure.
 
 ## Dataset
 
-This project uses the IIT Mandi Skull-to-Face dataset:
-[rspnikhil/IIT_Mandi_S2F](https://github.com/rspnikhil/IIT_Mandi_S2F)
+The project uses the IIT Mandi Skull-to-Face dataset as part of the experimental pipeline. The original dataset contains a very small number of paired skull/face samples, so the training workflow also includes a custom augmentation strategy to increase training diversity.
 
-- 51 skull X-ray pairs (frontal + lateral)
-- 128-dimensional ArcFace face embeddings
-- Augmented to 19,278 training pairs using custom pipeline
-- Combined with CelebA (200k faces) for two-stage training
+See the original project documentation and cited dataset/research sources for complete attribution.
 
-If you use this dataset please cite:
-@misc{prasad2025fcrinvestigatinggenerativeai,
-title={FCR: Investigating Generative AI models for
-Forensic Craniofacial Reconstruction},
-author={Ravi Shankar Prasad and Dinesh Singh},
-year={2025},
-eprint={2508.18031},
-archivePrefix={arXiv},
-primaryClass={cs.CV},
-url={https://arxiv.org/abs/2508.18031}
-}
+## Backend
 
----
+The application layer uses:
 
-## Security
+- Node.js
+- Express
+- MongoDB / Mongoose
+- JWT authentication
+- bcrypt password hashing
+- Multer for uploads
+- Axios for service-to-service communication
 
-- Passwords hashed with bcryptjs (salt rounds: 10)
-- JWT tokens with 7 day expiry
-- Admin-only middleware on all `/api/admin/*` routes
-- Role-based redirection on login
-- SSH tunnel for secure GPU server communication
+### Run the Node server
 
----
-
-## Related Repositories
-
-- Frontend: [skull2face-frontend](https://github.com/sssamridhi/skull2face-frontend)
-
----
-# Skull2Face AI — Setup Guide
-
-## Requirements
-
-### System Requirements
-- Node.js v18+ 
-- Python 3.9+
-- MongoDB Community Server
-- Git
-- NVIDIA GPU (for AI model — A100 recommended)
-
----
-
-## Backend Setup (Node.js)
-
-### 1. Clone the repo
 ```bash
-git clone https://github.com/sssamridhi/skull2face-backend.git
-cd skull2face-backend/server
-```
-
-### 2. Install Node packages
-```bash
+cd server
 npm install
-```
-
-### 3. Create .env file
-Create a file called `.env` inside the `server/` folder:
-```
-MONGO_URI=mongodb://localhost:27017/skull2face
-JWT_SECRET=your_super_secret_key_here
-AI_SERVICE_URL=http://localhost:8000
-PORT=5000
-```
-
-### 4. Seed the database (creates admin + user accounts)
-```bash
-node seed.js
-```
-
-### 5. Start the server
-```bash
+cp .env.example .env
 npm run dev
 ```
 
-Server runs on **http://localhost:5000**
+Configure the local `.env` with your own environment-specific values.
 
----
+## AI Service
 
-## AI Service Setup (Python/Flask on DGX)
+The AI service uses Flask and the deep-learning dependencies listed in:
 
-### 1. Activate gfpgan environment
-```bash
-conda activate gfpgan
+```text
+ai-service/requirements.txt
 ```
 
-### 2. Install Python requirements
-```bash
-pip install -r requirements.txt
-```
+The service is environment-specific and currently depends on the college-hosted GPU setup. It is therefore **not expected to run as a normal public deployment**.
 
-### 3. Run Flask API
-```bash
-cd /home/ffr/forensic_reconstruction
-CUDA_VISIBLE_DEVICES=4 python web/app.py
-```
+## Frontend
 
-Flask API runs on **http://0.0.0.0:8000**
+The frontend is implemented with HTML, CSS, and vanilla JavaScript.
 
----
+For local interface development, you can open the `frontend/` directory using a local web server such as VS Code Live Server.
 
-## SSH Tunnel (connect your PC to DGX)
+## Security and Privacy
 
-Run this in a terminal on your PC and keep it open:
-```bash
-ssh -L 8000:localhost:8000 ffr@172.16.40.56
-```
+- Do not commit `.env` files, passwords, tokens, or database credentials.
+- Do not commit real forensic records or sensitive case images.
+- Demo data should be synthetic or explicitly authorized.
+- The project should be treated as a research/academic prototype rather than a validated forensic identification tool.
 
-This tunnels your PC's port 8000 to the DGX server.
+## Deployment Status
 
----
+The public repository is intended to document and demonstrate the system architecture and implementation.
 
-## Frontend Setup
-
-### 1. Clone the repo
-```bash
-git clone https://github.com/sssamridhi/skull2face-frontend.git
-```
-
-### 2. Open with Live Server
-- Open VS Code
-- Install **Live Server** extension
-- Right click `login.html` → **Open with Live Server**
-
----
-
-## Full Startup Order (every time)
-
-```
-1. mongod                          ← start MongoDB
-2. cd server && npm run dev        ← start Node server  
-3. ssh -L 8000:localhost:8000 ...  ← SSH tunnel (keep open)
-4. conda activate gfpgan           ← on DGX
-5. python web/app.py               ← start Flask on DGX
-6. Open login.html with Live Server
-```
-
----
-
-## Demo Credentials
-
-| Role | Username | Password |
-|------|----------|----------|
-| Admin | admin | admin123 |
-| Investigator | user | user123 |
-
----
-
+The full AI inference service is **not publicly deployed** because it requires restricted access to the college GPU environment and is not intended for general public use.
 
 ## Project Context
 
-Developed as a B.Tech final year group project at Banasthali Vidyapith.
-
-The AI pipeline addresses a real challenge in forensic investigation —
-reconstructing a face from skeletal remains when no other identification
-is available. The system is designed to assist investigators, not replace
-forensic experts.
+Developed as a final-year B.Tech Computer Science Engineering group project at Banasthali Vidyapith.

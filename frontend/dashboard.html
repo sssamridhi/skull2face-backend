@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skull2Face AI — Investigator Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" id="hamburgerBtn">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <div class="topbar-brand">
+      <img src="assets/logo.png" alt="Logo" class="topbar-logo">
+      <span class="brand-text">Skull2Face <strong>AI</strong></span>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="notif-wrap">
+      <button class="icon-btn" id="notifBtn">
+        <i class="fa-regular fa-bell"></i>
+        <span class="badge-dot"></span>
+      </button>
+      <div class="notif-dropdown hidden" id="notifDropdown">
+        <div class="dropdown-header">
+          <span>Notifications</span>
+          <button class="clear-btn" onclick="clearNotifs()">Mark all read</button>
+        </div>
+        <ul class="notif-list">
+          <li class="notif-item unread">
+            <i class="fa-solid fa-circle-check ni-icon success"></i>
+            <div class="ni-text"><p>Reconstruction complete — <strong>CA112</strong></p><small>2 hours ago</small></div>
+          </li>
+          <li class="notif-item unread">
+            <i class="fa-solid fa-file-arrow-down ni-icon info"></i>
+            <div class="ni-text"><p>Report ready — <strong>CA109</strong></p><small>5 hours ago</small></div>
+          </li>
+          <li class="notif-item">
+            <i class="fa-solid fa-hourglass-half ni-icon warn"></i>
+            <div class="ni-text"><p>Case pending review — <strong>CA107</strong></p><small>Yesterday</small></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="avatar-wrap" id="avatarWrap">
+      <div class="avatar-circle"><span>IN</span></div>
+      <span class="avatar-label">Investigator</span>
+      <i class="fa-solid fa-chevron-down chev"></i>
+      <div class="profile-dropdown hidden" id="profileDropdown">
+        <div class="pd-head">
+          <div class="pd-avatar"><span>IN</span></div>
+          <div>
+            <p class="pd-name">Investigator</p>
+            <p class="pd-role">Forensic Analyst</p>
+          </div>
+        </div>
+        <ul class="pd-menu">
+          <li><button onclick="showSection('profile')"><i class="fa-regular fa-user"></i> My Profile</button></li>
+        </ul>
+        <div class="pd-footer">
+          <button class="logout-btn" onclick="window.location.href='login.html'">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <nav class="sidebar-nav">
+    <p class="nav-section-label">NAVIGATION</p>
+    <ul>
+      <li><button class="nav-btn active" data-section="dashboard" onclick="showSection('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></button></li>
+      <li><button class="nav-btn" data-section="newcase" onclick="showSection('newcase')"><i class="fa-solid fa-folder-plus"></i><span>New Case</span></button></li>
+      <li><button class="nav-btn" data-section="mycases" onclick="showSection('mycases')"><i class="fa-solid fa-folder-open"></i><span>My Cases</span></button></li>
+      <li><button class="nav-btn" data-section="reports" onclick="showSection('reports')"><i class="fa-solid fa-file-lines"></i><span>Reports</span></button></li>
+    </ul>
+  </nav>
+  <div class="sidebar-foot">
+    <i class="fa-solid fa-shield-halved"></i>
+    <span>v2.1.0 · Investigator</span>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main" id="mainContent">
+
+  <!-- ══ DASHBOARD ══ -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Overview</h1>
+        <p class="page-sub">Welcome back, Investigator. Here's your summary.</p>
+      </div>
+      <button class="cta-btn" onclick="showSection('newcase')">
+        <i class="fa-solid fa-plus"></i> New Reconstruction
+      </button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card" style="--clr:#8b5cf6">
+        <div class="stat-left"><span class="stat-label">Total Cases</span><span class="stat-num" data-target="24">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-folder"></i></div>
+        <div class="stat-progress" style="--pct:80%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#06b6d4">
+        <div class="stat-left"><span class="stat-label">Active</span><span class="stat-num" data-target="6">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-circle-half-stroke"></i></div>
+        <div class="stat-progress" style="--pct:25%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#10b981">
+        <div class="stat-left"><span class="stat-label">Completed</span><span class="stat-num" data-target="15">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-circle-check"></i></div>
+        <div class="stat-progress" style="--pct:62%"></div>
+      </div>
+      <div class="stat-card" style="--clr:#f59e0b">
+        <div class="stat-left"><span class="stat-label">Pending Review</span><span class="stat-num" data-target="3">0</span></div>
+        <div class="stat-icon-wrap"><i class="fa-solid fa-hourglass-half"></i></div>
+        <div class="stat-progress" style="--pct:12%"></div>
+      </div>
+    </div>
+    <div class="dash-bottom">
+      <div class="glass-card chart-card">
+        <div class="gc-header">
+          <span class="gc-title">Cases per Month</span>
+          <span class="gc-tag">Last 6 months</span>
+        </div>
+        <canvas id="casesChart" height="220"></canvas>
+      </div>
+      <div class="glass-card activity-card">
+        <div class="gc-header">
+          <span class="gc-title">Recent Activity</span>
+          <span class="gc-tag live"><i class="fa-solid fa-circle"></i> Live</span>
+        </div>
+        <ul class="activity-list">
+          <li><div class="a-dot success"></div><div class="a-body"><p>Reconstruction complete — <strong>CA112</strong></p><small>Today, 09:14 AM</small></div></li>
+          <li><div class="a-dot info"></div><div class="a-body"><p>New case submitted — <strong>CA113</strong></p><small>Today, 08:32 AM</small></div></li>
+          <li><div class="a-dot warn"></div><div class="a-body"><p>Case pending review — <strong>CA110</strong></p><small>Yesterday, 05:50 PM</small></div></li>
+          <li><div class="a-dot success"></div><div class="a-body"><p>Report downloaded — <strong>CA109</strong></p><small>Yesterday, 02:17 PM</small></div></li>
+          <li><div class="a-dot info"></div><div class="a-body"><p>New case submitted — <strong>CA111</strong></p><small>Mar 25, 11:00 AM</small></div></li>
+          <li><div class="a-dot success"></div><div class="a-body"><p>Reconstruction complete — <strong>CA108</strong></p><small>Mar 24, 03:45 PM</small></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ NEW CASE ══ -->
+  <section class="page" id="page-newcase">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">New Case</h1>
+        <p class="page-sub">Submit a new facial reconstruction request.</p>
+      </div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="glass-card form-card" id="newCaseForm">
+
+      <!-- Case ID + Date -->
+      <div class="form-row">
+        <div class="form-group">
+          <label><i class="fa-solid fa-hashtag"></i> Case ID</label>
+          <input type="text" id="caseId" placeholder="Enter Case ID">
+        </div>
+        <div class="form-group">
+          <label><i class="fa-regular fa-calendar"></i> Date</label>
+          <input type="date" id="caseDate">
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group span2">
+        <label><i class="fa-solid fa-pen-to-square"></i> Case Description</label>
+        <textarea id="caseDesc" placeholder="Enter case details, background, and relevant notes..." rows="4"></textarea>
+      </div>
+
+      <!-- Upload -->
+      <div class="form-group span2">
+        <label><i class="fa-solid fa-x-ray"></i> Skull X-ray Images</label>
+        <div class="upload-row">
+
+          <!-- Frontal: accepts image + pdf -->
+          <div class="upload-zone" id="uzFrontal"
+               onclick="triggerUpload('frontal')"
+               ondragover="dragOver(event,'frontal')"
+               ondragleave="dragLeave('frontal')"
+               ondrop="dropFile(event,'frontal')">
+            <input type="file" id="fileFrontal"
+                   accept="image/png,image/jpeg,image/jpg,image/webp,image/bmp,application/pdf"
+                   style="display:none" onchange="previewFile('frontal')">
+            <div class="uz-placeholder" id="phFrontal">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+              <span>Frontal X-ray</span>
+              <small>PNG, JPG, WEBP, BMP, PDF</small>
+            </div>
+            <img id="prevFrontal" class="uz-preview" alt="">
+            <div class="uz-filename hidden" id="fnFrontal"></div>
+          </div>
+
+          <!-- Lateral: accepts image + pdf — separate file required -->
+          <div class="upload-zone" id="uzLateral"
+               onclick="triggerUpload('lateral')"
+               ondragover="dragOver(event,'lateral')"
+               ondragleave="dragLeave('lateral')"
+               ondrop="dropFile(event,'lateral')">
+            <input type="file" id="fileLateral"
+                   accept="image/png,image/jpeg,image/jpg,image/webp,image/bmp,application/pdf"
+                   style="display:none" onchange="previewFile('lateral')">
+            <div class="uz-placeholder" id="phLateral">
+              <i class="fa-solid fa-arrow-up-from-bracket"></i>
+              <span>Lateral X-ray</span>
+              <small>PNG, JPG, WEBP, BMP, PDF</small>
+            </div>
+            <img id="prevLateral" class="uz-preview" alt="">
+            <div class="uz-filename hidden" id="fnLateral"></div>
+          </div>
+
+        </div>
+        <!-- Same-file warning -->
+        <p class="upload-warn hidden" id="sameFileWarn">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          Both images appear to be the same file. Please upload different X-rays for frontal and lateral views.
+        </p>
+      </div>
+
+      <!-- TRAITS -->
+      <div class="form-group span2">
+        <label><i class="fa-solid fa-sliders"></i> Traits</label>
+        <div class="traits-grid">
+
+          <!-- Gender -->
+          <div class="trait-block">
+            <span class="trait-lbl"><i class="fa-solid fa-venus-mars"></i> Gender</span>
+            <select class="trait-select" id="traitGender">
+              <option value="Auto Detect">Auto Detect</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+
+          <!-- Age Group -->
+          <div class="trait-block">
+            <span class="trait-lbl"><i class="fa-solid fa-cake-candles"></i> Age Group</span>
+            <select class="trait-select" id="traitAge">
+              <option value="Auto">Auto</option>
+              <option value="10–20 years">10–20 years</option>
+              <option value="21–30 years">21–30 years</option>
+              <option value="31–45 years">31–45 years</option>
+              <option value="Older than 45 years">Older than 45 years</option>
+            </select>
+          </div>
+
+          <!-- Hair -->
+          <div class="trait-block">
+            <span class="trait-lbl"><i class="fa-solid fa-user"></i> Hair</span>
+            <select class="trait-select" id="traitHair">
+              <option value="Auto">Auto</option>
+              <option value="Black Hair">Black Hair</option>
+              <option value="Brown Hair">Brown Hair</option>
+            </select>
+          </div>
+
+          <!-- Skin Tone -->
+          <div class="trait-block">
+            <span class="trait-lbl"><i class="fa-solid fa-palette"></i> Skin Tone</span>
+            <select class="trait-select" id="traitSkin">
+              <option value="Auto">Auto</option>
+              <option value="Fair Skin">Fair Skin</option>
+              <option value="Dark Skin">Dark Skin</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="span2">
+        <button class="cta-btn full-btn" id="submitBtn" onclick="submitCase()">
+          <i class="fa-solid fa-microchip"></i> Run Reconstruction
+        </button>
+      </div>
+    </div><!-- /form-card -->
+
+    <!-- ── OUTPUT PAGE (hidden until reconstruction) ── -->
+    <div class="output-page hidden" id="outputPage">
+      <div class="output-page-header">
+        <div class="output-page-title-wrap">
+          <div class="output-status-icon"><i class="fa-solid fa-circle-check"></i></div>
+          <div>
+            <h2 class="output-page-title">Reconstruction Complete</h2>
+            <p class="output-page-sub">Case <span id="outCaseIdLabel"></span> · <span id="outDateLabel"></span></p>
+          </div>
+        </div>
+        <div class="output-page-actions">
+          <button class="cta-btn" onclick="downloadReport()">
+            <i class="fa-solid fa-file-arrow-down"></i> Download PDF Report
+          </button>
+          <button class="cta-btn outline-btn" onclick="startNewCase()">
+            <i class="fa-solid fa-plus"></i> New Case
+          </button>
+        </div>
+      </div>
+
+      <!-- Comparison Row: Skulls + Face side by side -->
+      <div class="output-comparison-row">
+
+        <!-- Frontal Skull -->
+        <div class="glass-card comparison-card">
+          <div class="gc-header"><span class="gc-title"><i class="fa-solid fa-x-ray"></i> Frontal X-ray</span></div>
+          <div class="comparison-img-wrap">
+            <img id="outFrontalImg" class="comparison-img hidden" alt="Frontal X-ray">
+            <div class="comparison-ph" id="outFrontalPh"><i class="fa-solid fa-x-ray"></i><span>Frontal</span></div>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="comparison-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+
+        <!-- Reconstructed Face -->
+        <div class="glass-card comparison-card face-result-card">
+          <div class="gc-header"><span class="gc-title"><i class="fa-solid fa-face-smile"></i> Reconstructed Face</span></div>
+          <div class="comparison-img-wrap output-face-box">
+            <i class="fa-solid fa-person-circle-check output-face-icon"></i>
+            <p style="color:#64748b;font-size:13px">Processing...</p>
+          </div>
+        </div>
+
+        <!-- Arrow -->
+        <div class="comparison-arrow"><i class="fa-solid fa-arrow-left"></i></div>
+
+        <!-- Lateral Skull -->
+        <div class="glass-card comparison-card">
+          <div class="gc-header"><span class="gc-title"><i class="fa-solid fa-x-ray"></i> Lateral X-ray</span></div>
+          <div class="comparison-img-wrap">
+            <img id="outLateralImg" class="comparison-img hidden" alt="Lateral X-ray">
+            <div class="comparison-ph" id="outLateralPh"><i class="fa-solid fa-x-ray"></i><span>Lateral</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Case Details below -->
+      <div class="glass-card output-details-card" style="margin-top:20px">
+        <div class="gc-header"><span class="gc-title"><i class="fa-solid fa-circle-info"></i> Case Details</span></div>
+        <div id="outputMeta" class="output-meta-list"></div>
+      </div>
+    </div><!-- /outputPage -->
+
+  </section>
+
+  <!-- ══ MY CASES ══ -->
+  <section class="page" id="page-mycases">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">My Cases</h1>
+        <p class="page-sub">Search and review all your submitted cases.</p>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <i class="fa-solid fa-magnifying-glass search-ico"></i>
+      <input type="text" id="caseSearch" placeholder="Search by Case ID (CA112, 112, ca112) or description..." oninput="filterCases()">
+    </div>
+    <div class="cases-grid" id="casesGrid"></div>
+    <p class="empty-msg hidden" id="noResults"><i class="fa-solid fa-circle-exclamation"></i> No cases match your search.</p>
+  </section>
+
+  <!-- ══ REPORTS ══ -->
+  <section class="page" id="page-reports">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">Reports</h1>
+        <p class="page-sub">Download completed reconstruction reports.</p>
+      </div>
+    </div>
+    <div class="reports-grid" id="reportsGrid"></div>
+  </section>
+
+  <!-- ══ PROFILE ══ -->
+  <section class="page" id="page-profile">
+    <div class="page-header">
+      <div>
+        <h1 class="page-title">My Profile</h1>
+        <p class="page-sub">Manage your account information.</p>
+      </div>
+    </div>
+    <div class="glass-card profile-card">
+      <div class="profile-hero">
+        <!-- Avatar with upload -->
+        <div style="position:relative;display:inline-block;cursor:pointer" onclick="document.getElementById('avatarUploadInput').click()">
+          <div class="profile-avatar-xl" id="profileAvatarCircle">
+            <img id="profileAvatarImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:none">
+            <span id="profileAvatarInitials">IN</span>
+          </div>
+          <div style="position:absolute;bottom:0;right:0;background:#8b5cf6;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:2px solid #0b0e1a">
+            <i class="fa-solid fa-camera" style="font-size:12px;color:white"></i>
+          </div>
+        </div>
+        <input type="file" id="avatarUploadInput" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+        <div>
+          <h2 id="profileNameDisplay">Investigator</h2>
+          <p class="profile-role"><i class="fa-solid fa-shield-halved"></i> Forensic Analyst</p>
+          <p class="profile-id-tag" id="profileDeptDisplay">Department: Forensic Division</p>
+        </div>
+      </div>
+      <div class="profile-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fa-regular fa-user"></i> Full Name</label>
+            <input type="text" id="profileFullName" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label><i class="fa-solid fa-building"></i> Department</label>
+            <input type="text" id="profileDept" placeholder="e.g. Forensic Division">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label><i class="fa-regular fa-envelope"></i> Email</label>
+            <input type="text" id="profileEmail" placeholder="name@gmail.com or name@outlook.com"
+              oninput="clearFieldError('profileEmail','emailError')">
+            <span class="field-error hidden" id="emailError"></span>
+            <span class="field-hint">Allowed: @gmail.com or @outlook.com only</span>
+          </div>
+          <div class="form-group">
+            <label><i class="fa-solid fa-phone"></i> Phone</label>
+            <input type="text" id="profilePhone" placeholder="+91 9876543210"
+              oninput="clearFieldError('profilePhone','phoneError')">
+            <span class="field-error hidden" id="phoneError"></span>
+            <span class="field-hint">Format: +91 followed by 10 digits starting with 6–9</span>
+          </div>
+        </div>
+        <button class="cta-btn" onclick="saveProfile()">
+          <i class="fa-solid fa-floppy-disk"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="dashboard.js"></script>
+</body>
+</html>

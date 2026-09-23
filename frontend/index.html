@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Skull2Face AI</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">
+    <img src="assets/logo.png" alt="Logo">
+    <h2>Skull2Face AI</h2>
+  </div>
+  <a href="login.html" class="btn login-btn">Login</a>
+</nav>
+
+<!-- HERO SECTION -->
+<section class="hero">
+  <div class="hero-text">
+    <h1>Unveiling Faces from the Past</h1>
+    <h3>AI-Powered Forensic Face Reconstruction</h3>
+    <p class="main-line">
+      Turn skeletal remains into realistic facial reconstructions — faster, smarter, and more accurate than ever before.
+    </p>
+    <p class="sub-line">
+      Skull2Face AI assists forensic investigators, law enforcement, and researchers in identifying the unidentified.
+    </p>
+    <div class="hero-buttons">
+      <a href="login.html" class="btn primary">Start Reconstructing</a>
+      <a href="#learn-more" class="btn secondary">See How It Works</a>
+    </div>
+  </div>
+</section>
+
+<div id="learn-more">
+
+  <!-- SECTION 1 -->
+  <section class="split-section">
+    <div class="split-container">
+      <div class="text">
+        <h2>Every Skull Has a Story. </h2>
+        <h2>We Help Tell It.</h2>
+        <p>
+          Thousands of unidentified remains go unrecognized each year. Skull2Face AI analyzes skull X-rays
+          and biometric markers to generate accurate, AI-driven facial approximations — giving investigators
+          a powerful new tool to restore identity and bring closure.
+        </p>
+      </div>
+      <div class="image">
+        <img src="assets/top_left.png" class="split-img" alt="Skull reconstruction illustration">
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2 -->
+  <section class="split-section reverse">
+    <div class="split-container">
+      <div class="text">
+        <h2>Forensic Precision, Without the Wait</h2>
+        <p>
+          Traditional forensic reconstruction demands weeks of manual sculpting and expert interpretation.
+          Skull2Face AI condenses that process into minutes — delivering consistent, data-driven results
+          that keep pace with real investigations.
+        </p>
+      </div>
+      <div class="image">
+        <img src="assets/top_right.png" class="split-img" alt="AI processing visualization">
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — SCROLL-ANIMATED STEP CARDS -->
+  <section class="steps-section">
+    <div class="steps-header">
+      <h2>Four Steps. One Face.</h2>
+      <p>From raw skeletal data to a fully reconstructed face — our AI pipeline works in four precise, intelligent stages.</p>
+    </div>
+
+    <div class="steps-grid">
+
+      <div class="step-card" data-index="0">
+        <div class="step-number">01</div>
+        <div class="step-icon"></div>
+        <h3>Upload Skull X-ray</h3>
+        <p>Submit a frontal or lateral skull X-ray scan directly into the system for immediate processing.</p>
+        <div class="step-glow"></div>
+      </div>
+
+      <div class="step-card" data-index="1">
+        <div class="step-number">02</div>
+        <div class="step-icon"></div>
+        <h3>Extract Biometric Data</h3>
+        <p>AI maps bone landmarks, cranial dimensions, and structural markers with forensic-grade accuracy.</p>
+        <div class="step-glow"></div>
+      </div>
+
+      <div class="step-card" data-index="2">
+        <div class="step-number">03</div>
+        <div class="step-icon"></div>
+        <h3>Run AI Model</h3>
+        <p>Deep learning interprets skeletal structure and predicts soft tissue depth and facial geometry.</p>
+        <div class="step-glow"></div>
+      </div>
+
+      <div class="step-card" data-index="3">
+        <div class="step-number">04</div>
+        <div class="step-icon"></div>
+        <h3>Generate Face</h3>
+        <p>A realistic facial reconstruction is rendered, reviewed, and ready for investigative use.</p>
+        <div class="step-glow"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SECTION 4 -->
+  <section class="split-section reverse">
+    <div class="split-container">
+      <div class="text">
+        <h2>Built on Cutting-Edge AI &amp; Forensic Science</h2>
+        <p>
+          Skull2Face AI combines deep learning, 3D morphological analysis, and forensic anthropology principles
+          to interpret bone structure with scientific rigor — producing reconstructions that are not just
+          realistic, but defensible in investigative and legal contexts.
+        </p>
+      </div>
+      <div class="image">
+        <img src="assets/bottom_right.png" class="split-img" alt="AI and forensic science">
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Skull2Face AI &nbsp;·&nbsp; Forensic Identity Reconstruction &nbsp;·&nbsp; Built for Justice</p>
+</footer>
+
+<script>
+  // Scroll-triggered reveal for step cards
+  const cards = document.querySelectorAll('.step-card');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const delay = parseInt(card.dataset.index) * 180;
+        setTimeout(() => {
+          card.classList.add('visible');
+        }, delay);
+        observer.unobserve(card);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  cards.forEach(card => observer.observe(card));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,435 @@
+/* ================= GLOBAL STYLES ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  color: white;
+  background:
+    linear-gradient(rgba(10,10,20,0.82), rgba(10,10,20,0.92)),
+    url("assets/home-bg.png") no-repeat center center / cover;
+  background-attachment: fixed;
+}
+
+/* ================= NAVBAR ================= */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 45px;
+  filter: drop-shadow(0 0 8px #8b5cf6);
+}
+
+.logo h2 {
+  font-weight: 600;
+  color: #e0e7ff;
+}
+
+/* ================= BUTTONS ================= */
+.btn {
+  padding: 10px 22px;
+  border-radius: 25px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s;
+  display: inline-block;
+}
+
+.login-btn {
+  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+  color: white;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+.login-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 22px rgba(139, 92, 246, 0.9);
+}
+
+.primary {
+  background: linear-gradient(45deg, #8b5cf6, #06b6d4);
+  color: white;
+  margin-right: 15px;
+}
+
+.primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.8);
+}
+
+.secondary {
+  border: 1px solid #8b5cf6;
+  color: #c4b5fd;
+}
+
+.secondary:hover {
+  background: #8b5cf6;
+  color: white;
+}
+
+/* ================= HERO SECTION ================= */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 120px 80px;
+}
+
+.hero-text {
+  backdrop-filter: blur(6px);
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 800px;
+}
+
+.hero-text h1 {
+  font-size: 58px;
+  line-height: 1.15;
+  background: linear-gradient(to right, #a78bfa, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.hero-text h3 {
+  margin: 14px 0 0;
+  color: #c4b5fd;
+  font-weight: 400;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+.main-line {
+  margin-top: 24px;
+  font-size: 17px;
+  color: #e5e7eb;
+  line-height: 1.7;
+}
+
+.sub-line {
+  margin-top: 10px;
+  color: #9ca3af;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  margin-top: 30px;
+}
+
+/* ================= LEARN MORE SECTIONS ================= */
+#learn-more {
+  background: linear-gradient(180deg, #020617, #0f172a);
+}
+
+.split-section {
+  padding: 110px 80px;
+  display: flex;
+  align-items: center;
+}
+
+.split-section:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.split-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  width: 100%;
+  min-height: 300px;
+}
+
+.reverse .split-container {
+  flex-direction: row-reverse;
+}
+
+/* TEXT SIDE */
+.text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 20px;
+}
+
+.text h2 {
+  font-size: 36px;
+  margin-bottom: 20px;
+  background: linear-gradient(to right, #a78bfa, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  line-height: 1.25;
+}
+
+.text p {
+  color: #cbd5f5;
+  line-height: 1.85;
+  font-size: 15.5px;
+}
+
+/* IMAGE SIDE */
+.image {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.split-img {
+  width: 100%;
+  max-width: 420px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: 0 0 35px rgba(139, 92, 246, 0.3);
+  transition: transform 0.4s, box-shadow 0.4s;
+}
+
+.split-img:hover {
+  transform: scale(1.07);
+  box-shadow: 0 0 55px rgba(139, 92, 246, 0.6);
+}
+
+/* ================= STEP CARDS SECTION (SECTION 3) ================= */
+.steps-section {
+  padding: 110px 80px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.steps-header {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.steps-header h2 {
+  font-size: 42px;
+  background: linear-gradient(to right, #a78bfa, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 16px;
+}
+
+.steps-header p {
+  color: #9ca3af;
+  font-size: 16px;
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* 4-column grid */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+}
+
+/* ---- CARD BASE STATE (hidden, ready to animate in) ---- */
+.step-card {
+  position: relative;
+  padding: 36px 28px 32px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(139, 92, 246, 0.15);
+  overflow: hidden;
+  cursor: default;
+
+  /* start invisible, shifted down */
+  opacity: 0;
+  transform: translateY(50px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    border-color 0.4s,
+    box-shadow 0.4s,
+    background 0.4s;
+}
+
+/* ---- CARD VISIBLE STATE (added by JS on scroll) ---- */
+.step-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Hover lift */
+.step-card:hover {
+  border-color: rgba(139, 92, 246, 0.6);
+  box-shadow: 0 20px 60px rgba(139, 92, 246, 0.25);
+  background: rgba(139, 92, 246, 0.08);
+  transform: translateY(-10px);
+}
+
+/* Glow blob behind card */
+.step-glow {
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139,92,246,0.3), transparent 70%);
+  bottom: -60px;
+  right: -40px;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  opacity: 0;
+}
+
+.step-card:hover .step-glow {
+  opacity: 1;
+}
+
+/* Step number */
+.step-number {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(to right, rgba(167,139,250,0.25), rgba(34,211,238,0.15));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  margin-bottom: 16px;
+  transition: all 0.4s;
+  letter-spacing: -2px;
+}
+
+.step-card:hover .step-number {
+  background: linear-gradient(to right, #a78bfa, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Emoji icon */
+.step-icon {
+  font-size: 34px;
+  margin-bottom: 18px;
+  display: inline-block;
+  transition: transform 0.4s;
+}
+
+.step-card:hover .step-icon {
+  transform: scale(1.2) rotate(-8deg);
+}
+
+/* Card heading */
+.step-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #e0e7ff;
+  margin-bottom: 12px;
+  transition: color 0.3s;
+}
+
+.step-card:hover h3 {
+  color: #c4b5fd;
+}
+
+/* Card body */
+.step-card p {
+  font-size: 13.5px;
+  color: #6b7280;
+  line-height: 1.7;
+  transition: color 0.3s;
+}
+
+.step-card:hover p {
+  color: #a5b4fc;
+}
+
+/* ================= FOOTER ================= */
+footer {
+  text-align: center;
+  padding: 24px 20px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #9ca3af;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1100px) {
+  .steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    padding: 16px 24px;
+  }
+
+  .hero {
+    padding: 80px 24px;
+  }
+
+  .hero-text h1 {
+    font-size: 38px;
+  }
+
+  .split-section {
+    padding: 70px 24px;
+  }
+
+  .steps-section {
+    padding: 70px 24px;
+  }
+
+  .split-container,
+  .reverse .split-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .text {
+    padding-right: 0;
+  }
+
+  .split-img {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-header h2 {
+    font-size: 30px;
+  }
+
+  .hero-text h1 {
+    font-size: 28px;
+  }
+
+  .hero-text h3 {
+    font-size: 15px;
+  }
+
+  .text h2 {
+    font-size: 26px;
+  }
+}

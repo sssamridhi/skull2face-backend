@@ -1,0 +1,30 @@
+﻿# Environment
+.env
+.env.*
+!.env.example
+server/.env
+
+# Node
+node_modules/
+server/node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Model weights / checkpoints
+*.pth
+*.ckpt
+*.pt
+
+# Generated / runtime data
+server/uploads/
+outputs/
+nohup.out
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
