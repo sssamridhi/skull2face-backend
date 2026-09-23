@@ -1,8 +1,8 @@
-﻿# Skull2Face AI
+# Skull2Face AI
 
 Skull2Face AI is an academic prototype for AI-assisted forensic facial reconstruction from skull X-ray inputs. The project was developed as a B.Tech final-year group project at Banasthali Vidyapith.
 
-> **Important:** This project is not a public-facing forensic service and is not intended for operational identification or legal decision-making. The reconstruction pipeline depends on a college-hosted GPU environment that is accessible only within the institution''s network.
+> **Important:** This project is not a public-facing forensic service and is not intended for operational identification or legal decision-making. The reconstruction pipeline depends on a college-hosted GPU environment that is accessible only within the institution's network.
 
 ## System Overview
 
@@ -31,37 +31,37 @@ Investigator / Admin Interface
 
 ```text
 skull2face/
-â”œâ”€â”€ frontend/               # Investigator/admin web interface
-â”‚   â”œâ”€â”€ index.html
-â”‚   â”œâ”€â”€ login.html
-â”‚   â”œâ”€â”€ dashboard.html
-â”‚   â”œâ”€â”€ admin-dashboard.html
-â”‚   â”œâ”€â”€ *.css
-â”‚   â”œâ”€â”€ *.js
-â”‚   â””â”€â”€ assets/
-â”œâ”€â”€ server/                 # Node.js + Express application layer
-â”‚   â”œâ”€â”€ config/
-â”‚   â”œâ”€â”€ middleware/
-â”‚   â”œâ”€â”€ models/
-â”‚   â”œâ”€â”€ routes/
-â”‚   â”œâ”€â”€ index.js
-â”‚   â”œâ”€â”€ package.json
-â”‚   â””â”€â”€ .env.example
-â”œâ”€â”€ ai-service/             # Flask inference API
-â”‚   â”œâ”€â”€ app.py
-â”‚   â””â”€â”€ requirements.txt
-â”œâ”€â”€ docs/
-â”‚   â””â”€â”€ architecture.md
-â”œâ”€â”€ .gitignore
-â””â”€â”€ README.md
+|-- frontend/               # Investigator/admin web interface
+|   |-- index.html
+|   |-- login.html
+|   |-- dashboard.html
+|   |-- admin-dashboard.html
+|   |-- *.css
+|   |-- *.js
+|   `-- assets/
+|-- server/                 # Node.js + Express application layer
+|   |-- config/
+|   |-- middleware/
+|   |-- models/
+|   |-- routes/
+|   |-- index.js
+|   |-- package.json
+|   `-- .env.example
+|-- ai-service/             # Flask inference API
+|   |-- app.py
+|   `-- requirements.txt
+|-- docs/
+|   `-- architecture.md
+|-- .gitignore
+`-- README.md
 ```
 
 ## What the System Does
 
 The interface supports two user roles:
 
-- **Investigator** â€” submit a case, upload frontal/lateral skull X-rays, provide optional profile hints, view previous cases, and download results.
-- **Administrator** â€” manage users and cases, review system activity, and view dashboard statistics.
+- **Investigator** — submit a case, upload frontal/lateral skull X-rays, provide optional profile hints, view previous cases, and download results.
+- **Administrator** — manage users and cases, review system activity, and view dashboard statistics.
 
 The Node.js server handles authentication, case management, database access, uploads, and communication with the AI service.
 
@@ -141,4 +141,3 @@ The full AI inference service is **not publicly deployed** because it requires r
 ## Project Context
 
 Developed as a final-year B.Tech Computer Science Engineering group project at Banasthali Vidyapith.
-

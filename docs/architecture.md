@@ -1,4 +1,4 @@
-﻿# Skull2Face AI â€” Architecture
+# Skull2Face AI — Architecture
 
 ```text
 +-------------------------+
@@ -42,5 +42,4 @@
 
 ## Why the inference service is not public
 
-The reconstruction pipeline is coupled to a college-hosted GPU environment and is accessible only from the institution''s network. The repository therefore documents the complete software architecture while leaving the restricted inference infrastructure private.
-
+The reconstruction pipeline is coupled to a college-hosted GPU environment and is accessible only from the institution's network. The repository therefore documents the complete software architecture while leaving the restricted inference infrastructure private.
